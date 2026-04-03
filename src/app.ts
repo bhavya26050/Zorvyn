@@ -46,6 +46,17 @@ app.use(express.json({ limit: "100kb" }));
 app.use(express.urlencoded({ extended: false, limit: "100kb" }));
 app.use(morgan(env.nodeEnv === "production" ? "combined" : "dev"));
 
+app.get("/", (_req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Zorvyn API is live",
+    endpoints: {
+      health: "/health",
+      authLogin: "/api/auth/login"
+    }
+  });
+});
+
 app.get("/health", (_req, res) => {
   res.status(200).json({ success: true, message: "Server is healthy" });
 });

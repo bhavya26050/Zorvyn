@@ -40,6 +40,34 @@ src/
 
 - This repository is backend-only for submission.
 
+## Deployment
+
+Platform:
+
+- Render (Web Service)
+
+Live API URL:
+
+- https://zorvyn-api-lil2.onrender.com
+
+API Documentation URL:
+
+- https://your-docs.example.com
+
+Replace the above links with your final deployed URLs before submission.
+
+Deployed endpoint checks:
+
+- `GET /` -> API live message
+- `GET /health` -> health status
+- `POST /api/auth/login` -> login and JWT generation
+
+Evaluator note:
+
+- The API is deployed as backend-only (no frontend dependency required for testing).
+- `CORS_ORIGIN` can be configured as `*` for evaluator testing if no frontend URL is available.
+- On Render free tier, first request after inactivity may take longer due to cold start.
+
 ## Quick Start (Windows)
 
 Run these commands in PowerShell:
@@ -123,6 +151,21 @@ Use returned token as:
 
 ```txt
 Authorization: Bearer <token>
+```
+
+Example local login request (PowerShell):
+
+```powershell
+Invoke-RestMethod -Method Post `
+  -Uri "http://localhost:5000/api/auth/login" `
+  -ContentType "application/json" `
+  -Body '{"email":"admin@zorvyn.com","password":"Password@123"}'
+```
+
+Example deployed health check (PowerShell):
+
+```powershell
+Invoke-RestMethod -Method Get -Uri "https://your-render-service.onrender.com/health"
 ```
 
 ## API Overview
@@ -278,3 +321,9 @@ Recommended:
 - `PORT`
 - `JWT_EXPIRES_IN`
 - `CORS_ORIGIN`
+
+Suggested Render values:
+
+- `NODE_ENV=production`
+- `JWT_EXPIRES_IN=1d`
+- `CORS_ORIGIN=*` (for evaluator testing when no frontend is provided)
