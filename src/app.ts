@@ -9,6 +9,7 @@ import { errorHandler, notFoundHandler } from "./middlewares/errorHandler";
 import { env } from "./config/env";
 
 const app = express();
+const allowAllCorsOrigins = env.corsOrigins.length === 0 || env.corsOrigins.includes("*");
 
 app.use(helmet());
 app.use(
@@ -20,6 +21,11 @@ app.use(
       }
 
       if (env.nodeEnv !== "production") {
+        callback(null, true);
+        return;
+      }
+
+      if (allowAllCorsOrigins) {
         callback(null, true);
         return;
       }
