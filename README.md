@@ -52,9 +52,7 @@ Live API URL:
 
 API Documentation URL:
 
-- https://your-docs.example.com
-
-Replace the above links with your final deployed URLs before submission.
+- https://red-shadow-198623.postman.co/workspace/Zorvyn-Bhavya_Verma~55f48bf1-a88b-464a-b0cf-89264e08b805/overview
 
 Deployed endpoint checks:
 
@@ -165,7 +163,7 @@ Invoke-RestMethod -Method Post `
 Example deployed health check (PowerShell):
 
 ```powershell
-Invoke-RestMethod -Method Get -Uri "https://your-render-service.onrender.com/health"
+Invoke-RestMethod -Method Get -Uri "https://zorvyn-api-lil2.onrender.com/health"
 ```
 
 ## API Overview
