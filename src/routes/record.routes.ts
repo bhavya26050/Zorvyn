@@ -15,8 +15,8 @@ const router = Router();
 
 router.get("/", authorizeRoles(roles.viewer, roles.analyst, roles.admin), validateQuery(listRecordsQuerySchema), listRecordsHandler);
 router.get("/:id", authorizeRoles(roles.viewer, roles.analyst, roles.admin), getRecordHandler);
-router.post("/", authorizeRoles(roles.admin), validateBody(createRecordSchema), createRecordHandler);
-router.patch("/:id", authorizeRoles(roles.admin), validateBody(updateRecordSchema), updateRecordHandler);
-router.delete("/:id", authorizeRoles(roles.admin), deleteRecordHandler);
+router.post("/", authorizeRoles(roles.admin, roles.analyst), validateBody(createRecordSchema), createRecordHandler);
+router.patch("/:id", authorizeRoles(roles.admin, roles.analyst), validateBody(updateRecordSchema), updateRecordHandler);
+router.delete("/:id", authorizeRoles(roles.admin, roles.analyst), deleteRecordHandler);
 
 export default router;

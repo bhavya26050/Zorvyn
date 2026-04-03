@@ -14,7 +14,7 @@ Clean, role-based backend for a finance dashboard system.
 ## Roles and Access
 
 - VIEWER: Read own records and dashboard analytics
-- ANALYST: Read own records and dashboard analytics
+- ANALYST: Create, update, and delete own records; access own dashboard analytics
 - ADMIN: Full user and record management across all records
 
 ## Project Structure
@@ -138,9 +138,9 @@ Authorization: Bearer <token>
 
 - `GET /api/records` (VIEWER, ANALYST, ADMIN)
 - `GET /api/records/:id` (VIEWER, ANALYST, ADMIN)
-- `POST /api/records` (ADMIN)
-- `PATCH /api/records/:id` (ADMIN)
-- `DELETE /api/records/:id` (ADMIN)
+- `POST /api/records` (ANALYST, ADMIN)
+- `PATCH /api/records/:id` (ANALYST, ADMIN)
+- `DELETE /api/records/:id` (ANALYST, ADMIN)
 
 Response notes:
 
@@ -190,11 +190,78 @@ Query filters on `GET /api/records`:
 
 These defaults are intended for local development and testing only.
 
+The seed script creates:
+
+- 3 users (one per role)
+- Sample financial records spread across categories (Salary, Rent, Groceries, Freelance, Utilities) for each user
+- Records span recent months to support trend and summary queries
+
+## Response Examples
+
+### Login (200)
+
+```json
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "token": "<jwt>"
+  }
+}
+```
+
+### Create Record (201)
+
+```json
+{
+  "success": true,
+  "message": "Record created",
+  "data": {
+    "_id": "...",
+    "amount": 1000.50,
+    "type": "INCOME",
+    "category": "Salary",
+    "date": "2026-04-01T00:00:00.000Z",
+    "notes": "April salary",
+    "createdBy": "...",
+    "createdAt": "2026-04-03T10:00:00.000Z"
+  }
+}
+```
+
+### Dashboard Summary (200)
+
+```json
+{
+  "success": true,
+  "message": "Summary fetched",
+  "data": {
+    "totalIncome": 5000,
+    "totalExpenses": 2000,
+    "netBalance": 3000
+  }
+}
+```
+
+### Validation Error (400)
+
+```json
+{
+  "success": false,
+  "message": "Validation failed",
+  "code": "VALIDATION_ERROR",
+  "details": [
+    { "path": "amount", "message": "Expected number, received string" }
+  ]
+}
+```
+
 ## Assumptions
 
 - `amount` supports up to 2 decimal places.
-- Analyst is read-only for records in this version.
+- ANALYST can create, update, and delete records they own. VIEWER is read-only.
 - All non-auth routes require valid active user token.
+- Dashboard endpoints return only the authenticated user's own data.
 
 ## Environment Variables
 
