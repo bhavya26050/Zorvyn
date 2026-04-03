@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { getCategoryBreakdown, getRecentActivity, getSummary, getTrends } from "../services/dashboard.service";
 
-export const getSummaryHandler = async (_req: Request, res: Response, next: NextFunction) => {
+export const getSummaryHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const summary = await getSummary();
+    const summary = await getSummary(req.user!.userId);
 
     return res.status(200).json({
       success: true,
@@ -15,9 +15,9 @@ export const getSummaryHandler = async (_req: Request, res: Response, next: Next
   }
 };
 
-export const getCategoryBreakdownHandler = async (_req: Request, res: Response, next: NextFunction) => {
+export const getCategoryBreakdownHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await getCategoryBreakdown();
+    const data = await getCategoryBreakdown(req.user!.userId);
 
     return res.status(200).json({
       success: true,
@@ -29,9 +29,9 @@ export const getCategoryBreakdownHandler = async (_req: Request, res: Response, 
   }
 };
 
-export const getRecentActivityHandler = async (_req: Request, res: Response, next: NextFunction) => {
+export const getRecentActivityHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const data = await getRecentActivity();
+    const data = await getRecentActivity(req.user!.userId);
 
     return res.status(200).json({
       success: true,
@@ -46,7 +46,7 @@ export const getRecentActivityHandler = async (_req: Request, res: Response, nex
 export const getTrendsHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { groupBy } = req.query as { groupBy: "month" | "week" };
-    const data = await getTrends(groupBy);
+    const data = await getTrends(req.user!.userId, groupBy);
 
     return res.status(200).json({
       success: true,

@@ -1,8 +1,10 @@
+import { Types } from "mongoose";
 import { FinancialRecord } from "../models/FinancialRecord";
 import { recordType } from "../constants/roles";
 
-export const getSummary = async () => {
+export const getSummary = async (userId: string) => {
   const [result] = await FinancialRecord.aggregate([
+    { $match: { createdBy: new Types.ObjectId(userId) } },
     {
       $group: {
         _id: null,
@@ -30,8 +32,9 @@ export const getSummary = async () => {
   };
 };
 
-export const getCategoryBreakdown = async () => {
+export const getCategoryBreakdown = async (userId: string) => {
   return FinancialRecord.aggregate([
+    { $match: { createdBy: new Types.ObjectId(userId) } },
     {
       $group: {
         _id: { category: "$category", type: "$type" },
@@ -50,14 +53,14 @@ export const getCategoryBreakdown = async () => {
   ]);
 };
 
-export const getRecentActivity = async () => {
-  return FinancialRecord.find({})
+export const getRecentActivity = async (userId: string) => {
+  return FinancialRecord.find({ createdBy: userId })
     .sort({ date: -1, createdAt: -1 })
     .limit(10)
     .populate("createdBy", "name email role");
 };
 
-export const getTrends = async (groupBy: "month" | "week") => {
+export const getTrends = async (userId: string, groupBy: "month" | "week") => {
   const dateGrouping =
     groupBy === "month"
       ? {
@@ -70,6 +73,7 @@ export const getTrends = async (groupBy: "month" | "week") => {
         };
 
   return FinancialRecord.aggregate([
+    { $match: { createdBy: new Types.ObjectId(userId) } },
     {
       $group: {
         _id: { ...dateGrouping, type: "$type" },
