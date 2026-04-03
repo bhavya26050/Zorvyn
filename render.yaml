@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: zorvyn-api
+    runtime: node
+    plan: free
+    autoDeploy: true
+    buildCommand: npm install; npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_EXPIRES_IN
+        value: 1d
+      - key: ALLOW_SEED_RESET
+        value: "false"
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
